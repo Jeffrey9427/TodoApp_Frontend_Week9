@@ -22,6 +22,20 @@ export default function SignUp() {
         if (username.includes(" ")) {
             return setError("Username must not include spaces")
         }
+
+        if (
+            username === "" ||
+            email === "" ||
+            password === ""
+        ) {
+            let errorMessage = "Please fill in the following fields:\n";
+            if (email === "") errorMessage += "- username\n";
+            if (username === "") errorMessage += "- email\n";
+            if (password === "") errorMessage += "- password\n";
+    
+            alert(errorMessage);
+            return;
+        }
       
         try {
             setError("")

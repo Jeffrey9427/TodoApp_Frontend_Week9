@@ -28,8 +28,9 @@ export default function Login() {
             const { data } = response;
             if (data.success) {
                 const cookies = new Cookies(null, { path: '/' });
-                cookies.set('session', "loggedIn");
-                cookies.set('user_id', data.user_id);
+                await cookies.set('session_id', data.session_id);
+                await cookies.set('user_id', data.user_id);
+                await cookies.set('expiry_time', data.expiry_time);
                 navigate("/");
             } else {
                 setError("Invalid email or password");
@@ -85,7 +86,7 @@ export default function Login() {
                     }
                 </form>
 
-                <div className="flex justify-center mb-6">
+                <div className="flex justify-center my-6">
                     <p className="text-slate-700">Don't have an account? <Link to="/signup" className="font-semibold">Sign up</Link></p> 
                 </div>
 

@@ -12,9 +12,20 @@ export default function Landing() {
   const [username, setUsername] = useState("");
   
   function logout(){
-    const cookies = new Cookies(null, { path: '/' });
-    cookies.remove('session')
-    cookies.remove('user_id')
+    try {
+      const cookies = new Cookies(null, { path: '/' });
+      const session_id = cookies.get('session_id');
+      if (session_id) {
+          axios.delete(`http://localhost:8000/sessions/${session_id}`);
+      }
+      cookies.remove('session_id');
+      cookies.remove('user_id');
+      cookies.remove('expiry_time');
+      // Optionally, redirect the user to the login page or another page after logout
+      // navigate("/login");
+    } catch (err) {
+      console.error("Failed to logout - ", err);
+    }
   }
 
   async function handleSignOut() {
@@ -32,9 +43,9 @@ export default function Landing() {
     async function getUsername() {
       try {
         const cookies = new Cookies(); // Initialize cookies
-        const session = cookies.get('session'); // Get the session data
+        const session_id = cookies.get('session_id'); // Get the session data
         const user_id = cookies.get('user_id');
-        if (!session || !user_id) {
+        if (!session_id || !user_id) {
           throw new Error('Session data not found');
         }
         const response = await axios.get(`http://localhost:8000/users/${user_id}`); // Make a request to your backend to get the username
